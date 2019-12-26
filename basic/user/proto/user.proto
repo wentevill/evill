@@ -1,0 +1,17 @@
+syntax = "proto3";
+package user;
+
+import "base.proto";
+
+service User {
+        rpc SignUp(SignUpRequest) returns (SignUpResponse) {}
+}
+message SignUpRequest {
+        BaseRequest base = 1;
+        string name = 2;
+}
+
+message SignUpResponse {
+        BaseResponse base = 1;
+        string greeting = 2;
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+package user;
+service Base {
+}
+message BaseRequest {
+}
+
+message BaseResponse {
+        int32 Code = 1;
+        string Msg = 2;
+}
+
+service BasePage {
+}
+
+message BasePageRequest {
+    BaseRequest base = 1;
+    int32 Page = 2;
+    int32 Limit = 3;
+}
+
+message BasePageResponse {
+       BaseResponse base = 1;
+       int32 Total = 2;
+}
