@@ -11,8 +11,9 @@ var (
 	ErrAssembly = errors.New("unknown assembly")
 )
 
-var config = struct {
-	Log struct {
+type Config struct {
+	Port string
+	Log  struct {
 		Level int
 	}
 	Mysql struct {
@@ -24,7 +25,9 @@ var config = struct {
 		IDleConn int
 		MaxConn  int
 	}
-}{}
+}
+
+var config Config
 
 var (
 	ErrFileType = errors.New("unknown file suffix")
@@ -42,4 +45,8 @@ func configInit(path string) (err error) {
 		return
 	}
 	return
+}
+
+func GetConfig() Config {
+	return config
 }

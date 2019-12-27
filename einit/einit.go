@@ -1,6 +1,7 @@
 package einit
 
 import (
+	log "github.com/sirupsen/logrus"
 	"os"
 )
 
@@ -12,9 +13,17 @@ const (
 	Etcd
 )
 
-type initRes map[int]interface{}
+var assemblyEnum = map[int]string{
+	Log:   "log",
+	Mysql: "mysql",
+	Redis: "redis",
+	Kafka: "kafka",
+	Etcd:  "etcd",
+}
 
-func Init(n int, env string) (res initRes, err error) {
+type assembly map[int]interface{}
+
+func Init(n int, env string) (res assembly, err error) {
 	configPath := os.Getenv(env)
 	if configPath == "" {
 		configPath = env
@@ -23,13 +32,16 @@ func Init(n int, env string) (res initRes, err error) {
 		return
 	}
 	initLog()
-	res = make(initRes, 0)
+	log.Infof("init %s success...", assemblyEnum[Log])
+	res = make(assembly, 0)
 	for n != 0 {
 		var mid interface{}
 		var err error
+		var done int
 		switch {
 		case n&Mysql != 0:
 			n &= ^Mysql
+			done = Mysql
 			mid, err = initMysql()
 			res[Mysql] = mid
 		default:
@@ -38,6 +50,7 @@ func Init(n int, env string) (res initRes, err error) {
 		if err != nil {
 			return nil, err
 		}
+		log.Infof("init %s success...", assemblyEnum[done])
 	}
 	return
 }

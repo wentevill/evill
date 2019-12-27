@@ -1,10 +1,11 @@
+port: :8080
 log:
-  level: 1
+  level: 6
 mysql:
   dbname: test
-  addr: [127.0.0.1]
+  addr: [127.0.0.1:3306]
   user: root
-  password: 123456
+  password: J!Yc7&vyOB7tj&ZL
   port: 3306
   idleconn: 10
   maxconn: 10
