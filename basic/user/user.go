@@ -13,6 +13,7 @@ type User struct {
 }
 
 func (u *User) SignUp(ctx context.Context, in *user.SignUpRequest) (out *user.SignUpResponse, err error) {
+	out = new(user.SignUpResponse)
 	user := &model.User{
 		UserName: in.Name,
 	}

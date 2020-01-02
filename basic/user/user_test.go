@@ -18,7 +18,7 @@ type s struct {
 var _ = Suite(&s{})
 
 func (s *s) TestInit(c *C) {
-	res, err := einit.Init(einit.Log|einit.Mysql, "../../einit/config.yml")
+	res, err := einit.Init(einit.Log|einit.Mysql, "../../einit/user.yml")
 	c.Check(err, IsNil)
 	c.Check(res.Mysql(), NotNil)
 	u := &User{

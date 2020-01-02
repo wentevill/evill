@@ -13,5 +13,6 @@ func (Y YML) Load(c interface{}, path string) (err error) {
 	if f, err = os.OpenFile(path, os.O_RDONLY, 0666); err != nil {
 		return
 	}
+	defer f.Close()
 	return yaml.NewDecoder(f).Decode(c)
 }

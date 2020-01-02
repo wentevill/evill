@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	assembly, err := einit.Init(einit.Mysql|einit.Log, "./einit/config.yml")
+	assembly, err := einit.Init(einit.Mysql|einit.Log, "./config/user.yml")
 	if err != nil {
 		panic(err)
 	}
