@@ -4,12 +4,7 @@ import (
 	pb "evill/basic/user/proto"
 
 	"github.com/gin-gonic/gin"
-	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
-	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"time"
 )
 
 type user struct {
@@ -21,17 +16,17 @@ func (u *user) name() string {
 }
 
 func (u *user) init() error {
-	grOpts := []grpc_retry.CallOption{
-		grpc_retry.WithCodes(codes.Aborted, codes.DeadlineExceeded),
-		grpc_retry.WithMax(3),
-		grpc_retry.WithPerRetryTimeout(15 * time.Second),
-	}
+	//grOpts := []grpc_retry.CallOption{
+	//	grpc_retry.WithCodes(codes.Aborted, codes.DeadlineExceeded),
+	//	grpc_retry.WithMax(3),
+	//	grpc_retry.WithPerRetryTimeout(15 * time.Second),
+	//}
 	conn, err := grpc.Dial(u.name(),
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(
-			grpc_opentracing.UnaryClientInterceptor(),
-			grpc_retry.UnaryClientInterceptor(grOpts...),
-		)))
+		//grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(
+		//	grpc_retry.UnaryClientInterceptor(grOpts...),
+		//)),
+	)
 	if err != nil {
 		return err
 	}

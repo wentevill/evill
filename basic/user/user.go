@@ -1,11 +1,12 @@
 package main
 
 import (
-	"context"
 	"evill/basic/user/model"
 	"evill/basic/user/proto"
+	"golang.org/x/net/context"
 
 	"github.com/go-xorm/xorm"
+	log "github.com/sirupsen/logrus"
 )
 
 type User struct {
@@ -17,6 +18,7 @@ func (u *User) SignUp(ctx context.Context, in *user.SignUpRequest) (out *user.Si
 	user := &model.User{
 		UserName: in.Name,
 	}
+	log.WithContext(ctx).Infof("name:%s", in.Name)
 	if _, err := u.db.Table(user).Insert(user); err != nil {
 		return out, err
 	}

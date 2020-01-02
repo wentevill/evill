@@ -2,6 +2,7 @@ package main
 
 import (
 	"evill/einit"
+	"evill/internal/middleware"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 
 func newRouter() {
 	r := gin.Default()
+	r.Use(middleware.RequestId())
 
 	v1 := r.Group("/v1")
 
@@ -32,7 +34,7 @@ type base interface {
 }
 
 func errResponse(c *gin.Context, err error) {
-	log.Error(err)
+	log.WithContext(c).Error(err)
 	resp(c, http.StatusInternalServerError, nil)
 }
 func response(c *gin.Context, data interface{}) {

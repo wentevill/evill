@@ -3,13 +3,10 @@ package main
 import (
 	user "evill/basic/user/proto"
 	"evill/einit"
-	"google.golang.org/grpc"
-	"net"
-
-	"github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"net"
 )
 
 func main() {
@@ -18,16 +15,7 @@ func main() {
 		panic(err)
 	}
 
-	s := grpc.NewServer(
-		grpc.StreamInterceptor(
-			grpc_middleware.ChainStreamServer(
-				grpc_opentracing.StreamServerInterceptor(),
-			),
-		),
-		grpc.UnaryInterceptor(
-			grpc_middleware.ChainUnaryServer(
-				grpc_opentracing.UnaryServerInterceptor()),
-		))
+	s := grpc.NewServer()
 
 	user.RegisterUserServer(s, &User{db: assembly.Mysql()})
 
