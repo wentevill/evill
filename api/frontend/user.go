@@ -2,10 +2,9 @@ package main
 
 import (
 	pb "evill/basic/user/proto"
+	"evill/internal/middleware"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
 )
 
 type user struct {
@@ -17,15 +16,9 @@ func (u *user) name() string {
 }
 
 func (u *user) init() error {
-	var interceptor grpc.UnaryClientInterceptor
-	interceptor = func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-		md := metadata.Pairs("request_id", ctx.Value("request_id").(string))
-		ctx = metadata.NewOutgoingContext(ctx, md)
-		return invoker(ctx, method, req, reply, cc, opts...)
-	}
 	conn, err := grpc.Dial(u.name(),
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(interceptor),
+		grpc.WithUnaryInterceptor(middleware.RequestIdClient),
 	)
 	if err != nil {
 		return err

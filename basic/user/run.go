@@ -3,10 +3,9 @@ package main
 import (
 	user "evill/basic/user/proto"
 	"evill/einit"
+	"evill/internal/middleware"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 	"net"
 )
@@ -17,21 +16,8 @@ func main() {
 		panic(err)
 	}
 
-	var interceptor grpc.UnaryServerInterceptor
-	interceptor = func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-		// 继续处理请求
-		md, ok := metadata.FromIncomingContext(ctx)
-		if ok {
-			requestIds := md["request_id"]
-			if len(requestIds) != 0 {
-				ctx = context.WithValue(ctx, "request_id", requestIds[0])
-			}
-			return handler(ctx, req)
-		}
-		return handler(ctx, req)
-	}
 	var opts []grpc.ServerOption
-	opts = append(opts, grpc.UnaryInterceptor(interceptor))
+	opts = append(opts, grpc.UnaryInterceptor(middleware.RequestIdServer))
 	s := grpc.NewServer(opts...)
 
 	reflection.Register(s)
