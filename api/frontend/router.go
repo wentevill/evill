@@ -9,7 +9,7 @@ import (
 )
 
 func newRouter() {
-	r := gin.Default()
+	r := gin.New()
 	r.Use(middleware.RequestId())
 
 	v1 := r.Group("/v1")

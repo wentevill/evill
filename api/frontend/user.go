@@ -2,9 +2,10 @@ package main
 
 import (
 	pb "evill/basic/user/proto"
-
 	"github.com/gin-gonic/gin"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 type user struct {
@@ -16,16 +17,15 @@ func (u *user) name() string {
 }
 
 func (u *user) init() error {
-	//grOpts := []grpc_retry.CallOption{
-	//	grpc_retry.WithCodes(codes.Aborted, codes.DeadlineExceeded),
-	//	grpc_retry.WithMax(3),
-	//	grpc_retry.WithPerRetryTimeout(15 * time.Second),
-	//}
+	var interceptor grpc.UnaryClientInterceptor
+	interceptor = func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		md := metadata.Pairs("request_id", ctx.Value("request_id").(string))
+		ctx = metadata.NewOutgoingContext(ctx, md)
+		return invoker(ctx, method, req, reply, cc, opts...)
+	}
 	conn, err := grpc.Dial(u.name(),
 		grpc.WithInsecure(),
-		//grpc.WithUnaryInterceptor(grpc_middleware.ChainUnaryClient(
-		//	grpc_retry.UnaryClientInterceptor(grOpts...),
-		//)),
+		grpc.WithUnaryInterceptor(interceptor),
 	)
 	if err != nil {
 		return err
