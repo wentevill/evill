@@ -24,7 +24,6 @@ func RequestIdServer(ctx context.Context, req interface{}, info *grpc.UnaryServe
 		if len(requestIds) != 0 {
 			ctx = context.WithValue(ctx, name, requestIds[0])
 		}
-		return handler(ctx, req)
 	}
 	return handler(ctx, req)
 }
